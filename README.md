@@ -14,15 +14,25 @@ Platform: Tensorflow 2.7.0 and Python 3.8.0
 
 [2] Scripts:
 1) The source code files of HNSPPI model
+
 main.py - This script is the main entry of the program.
+
 parallel.py - This script is used to perform parallel experiments.
+
 utils.py - This script is used to prepare data and features for the model.
+
 evaluation.py – This script is used to evaluate the performance of HNSPPI.
+
 2) The source code files for SOTA algorithms
+
 DeepFE.py – This script is to evaluate the performance of DeepFE-PPI. The complete source code can be downloaded from https://github.com/xal2019/DeepFE-PPI.
+
 DCONV.py- This script is to evaluate the performance of DCONV. The source code can be downloaded from https://gitlab.univnantes.fr/richoux-f/DeepPPI/tree/v1.tcbb.
+
 DFC.py- This script is to evaluate the performance of DFC. The source code can be downloaded from https://gitlab.univnantes.fr/richoux-f/DeepPPI/tree/v1.tcbb.
+
 DeepPur(AAC).py- This script is to evaluate the performance of DeepPur(AAC). The code is downloaded from https://github.com/kexinhuang12345/DeepPurpose.
+
 DeepPur(CNN).py- This script is to evaluate the performance of DeepPur(CNN). The code is downloaded from https://github.com/kexinhuang12345/DeepPurpose.
 
 [3] Datasets: 
