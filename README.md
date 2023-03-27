@@ -30,10 +30,15 @@ DeepPur(CNN).py- This script is to evaluate the performance of DeepPur(CNN). The
 (2) The data profiles for each dataset also can be downloaded from the folder ‘data’ in the Github. 
 ## -------Sharing/access Information-------
 S.cerevisiae:	PMID: 25657331
+
 M.musculus:		PMID: 34536380
+
 H.pylori :      PMID: 11196647
+
 D.melanogaster:	PMID: 19171120
+
 Fly:	        PMID: 34536380
+
 Human:		    http://www.csbio.sjtu.edu.cn/bioinf/LR_PPI/Dara.htm
 
 [4] Running:
