@@ -36,7 +36,9 @@ DeepPur(AAC).py- This script is to evaluate the performance of DeepPur(AAC). The
 DeepPur(CNN).py- This script is to evaluate the performance of DeepPur(CNN). The code is downloaded from https://github.com/kexinhuang12345/DeepPurpose.
 
 [3] Datasets: 
+
 (1) In this study, we provided seven testing datasets. The whole package of data can be downloaded from our official website: http://cdsic.njau.edu.cn/data/PPIDataBankV1.0.
+
 (2) The data profiles for each dataset also can be downloaded from the folder ‘data’ in the Github. 
 
 -------Sharing/access Information-------
