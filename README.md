@@ -53,7 +53,7 @@ D.melanogaster:	PMID: 19171120
 
 Fly:	        PMID: 34536380
 
-Human:		    http://www.csbio.sjtu.edu.cn/bioinf/LR_PPI/Dara.htm
+Human:		    PMID: 20698572
 
 [4] Running:
 
