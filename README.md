@@ -57,7 +57,7 @@ Human:		    PMID: 20698572
 
 [4] Running:
 
---Running the HNSPPI model requires two edgelist files (one is for positive samples, and the other is for negative samples) and a csv file for protein sequences.
+--Running the HNSPPI model requires two edgelist files (one is for positive samples, and the other is for negative samples) and a csv file for the  amino acid sequences of proteins.
 
 --Command line:
 
