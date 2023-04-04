@@ -53,7 +53,7 @@ D.melanogaster:	PMID: 19171120
 
 Fly:	        PMID: 34536380
 
-Human:		    PMID: 20698572
+Human:		    csbio.sjtu.edu.cn/bioinf/LR_PPI/Data.htm.
 
 [4] Running:
 
