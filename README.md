@@ -68,3 +68,7 @@ run main.py script with --input1 <positive edgelist> --input2 <negative edgelist
 --For example: 
   
 python main.py --input1 data/mouse/mouse_pos.edgelist --input2 data/mouse/mouse_neg.edgelist --output embeddings/mouse --species ‘mouse’ --seed 0
+
+[5] Installation:
+  
+git clone https://github.com/50637/HNSPPI_V1.1.git
