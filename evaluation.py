@@ -1,30 +1,11 @@
-
 # -*- coding: utf-8 -*-
-
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, average_precision_score, f1_score, roc_auc_score
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.preprocessing import MultiLabelBinarizer
-from keras.models import Sequential
-import time
-from sklearn.model_selection import KFold,train_test_split,cross_val_score
-
-
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import precision_score
-from sklearn import datasets
+from sklearn.metrics import matthews_corrcoef
 from sklearn import svm
-from utils import *
-import keras
-from keras_applications.densenet import layers
 from utils import *
 import numpy as np
 
-
 def calculate_performace(test_num, pred_y, labels):
-    '''
-    Evaluate algorithm performance.
-    '''
     tp = 0
     fp = 0
     tn = 0
@@ -40,32 +21,37 @@ def calculate_performace(test_num, pred_y, labels):
                 tn = tn + 1
             else:
                 fp = fp + 1
+
+    if (tp + fn) == 0:
+        q9 = float(tn - fp) / (tn + fp + 1e-06)
+    if (tn + fp) == 0:
+        q9 = float(tp - fn) / (tp + fn + 1e-06)
+    if (tp + fn) != 0 and (tn + fp) != 0:
+        q9 = 1 - float(np.sqrt(2)) * np.sqrt(
+            float(fn * fn) / ((tp + fn) * (tp + fn)) + float(fp * fp) / ((tn + fp) * (tn + fp)))
+
+    Q9 = (float)(1 + q9) / 2
     accuracy = float(tp + tn) / test_num
     precision = float(tp) / (tp + fp + 1e-06)
     sensitivity = float(tp) / (tp + fn + 1e-06)
     recall = float(tp) / (tp + fn + 1e-06)
     specificity = float(tn) / (tn + fp + 1e-06)
+    ppv = float(tp) / (tp + fp + 1e-06)
+    npv = float(tn) / (tn + fn + 1e-06)
     f1_score = float(2 * tp) / (2 * tp + fp + fn + 1e-06)
     MCC = float(tp * tn - fp * fn) / (np.sqrt((tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)))
-    return  accuracy, precision, sensitivity, recall, specificity, MCC, f1_score
+    return tp, fp, tn, fn, accuracy, precision, sensitivity, recall, specificity, MCC, f1_score, Q9, ppv, npv
 
 def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_edges, seed,training_pos_edges):
-    '''
-    Predict new PPIs.
-    '''
     random.seed(seed)
     train_neg_edges = generate_neg_edges(G0, len(training_pos_edges), seed)
     G_aux = copy.deepcopy(G0)
+    # create a auxiliary graph to ensure that testing negative edges will not used in training
     for edge in train_neg_edges:
         node1 = edge[0]
         node2 = edge[1]
         G_aux.remove_edge(node1,node2)
-
-    test_neg_edges = G_aux.edges() #generate_neg_edges(G_aux, len(test_pos_edges), seed)
-    print(len(test_pos_edges))
-    print(len(training_pos_edges))
-
-    # construct X_train, y_train, X_test, y_test
+    test_neg_edges = G_aux.edges()
     X_train = []
     y_train = []
     for edge in training_pos_edges:
@@ -80,7 +66,6 @@ def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_ed
         feature_vector = np.append(node_u_emb, node_v_emb)
         X_train.append(feature_vector)
         y_train.append(0)
-
 
     X_test = []
     y_test = []
@@ -97,7 +82,6 @@ def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_ed
         X_test.append(feature_vector)
         y_test.append(0)
 
-
     X = np.concatenate((X_train, X_test))
     y = np.concatenate((y_train, y_test))
     c = list(zip(X, y))
@@ -106,7 +90,6 @@ def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_ed
     folds = 10
     X_folds = np.array_split(X, folds)
     y_folds = np.array_split(y, folds)
-    print(X_folds)
     accsum=[]
     presum=[]
     specisum=[]
@@ -114,27 +97,30 @@ def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_ed
     f1sum=[]
     aucsum=[]
     prcsum=[]
+    mccsum=[]
     for i in range(folds):
         X_train = np.vstack(X_folds[:i] + X_folds[i + 1:])
+        X_val = X_folds[i]
         y_train = np.hstack(y_folds[:i] + y_folds[i + 1:])
         y_val = y_folds[i]
-        X_val = X_folds[i]
-        clf = svm.SVC()  # svm class
+        clf = svm.SVC()
         clf.fit(X_train, y_train)  # training the svc model
-
         print('Start predicting...')
         pred_y= clf.predict(X_val)
         auc_test = roc_auc_score(y_val, pred_y)
         pr_test = average_precision_score(y_val, pred_y)
+        mcc=matthews_corrcoef(y_val, pred_y)
         test_num=len(y_val)
-        accuracy, precision, sensitivity, recall, specificity, MCC, f1_score = calculate_performace(test_num, pred_y, y_val)
+        tp, fp, tn, fn, accuracy, precision, sensitivity, recall, specificity, MCC, f1_score, Q9, ppv, npv=calculate_performace(test_num, pred_y, y_val)
         accsum.append(accuracy)
         presum.append(precision)
-        specisum.append(sensitivity)
+        specisum.append(specificity)
         recallsum.append(recall)
         f1sum.append(f1_score)
         aucsum.append(auc_test)
         prcsum.append(pr_test)
+        mccsum.append(mcc)
+        print("fold：%s accuracy：%s precision：%s" % (i, accuracy, precision))
     with open('result'+str(seed)+'.csv','w') as f:
         f.write('acc')
         f.write('\n')
@@ -177,10 +163,12 @@ def PPIPrediction(embedding_look_up, original_graph, train_graph,G0, test_pos_ed
         f.write(str(np.mean(prcsum)))
         f.write('\n')
         f.write(str(np.std(prcsum)))
-
-
-       
-
+        f.write('\n')
+        f.write('mcc')
+        f.write('\n')
+        f.write(str(np.mean(mccsum)))
+        f.write('\n')
+        f.write(str(np.std(mccsum)))
 
 
 
