@@ -73,6 +73,6 @@ python main.py --input1 data/mouse/mouse_pos.edgelist --input2 data/mouse/mouse_
   
 git clone https://github.com/50637/HNSPPI_V1.1.git
 
-[6] Execute the code cell by cell:
+[6] Execute the code cell by cell in the Python interactive window:
   
-run main.ipynb in Jupyter Notebook cell by cell
+run main.ipynb with Jupyter code cells
