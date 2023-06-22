@@ -72,3 +72,7 @@ python main.py --input1 data/mouse/mouse_pos.edgelist --input2 data/mouse/mouse_
 [5] Installation:
   
 git clone https://github.com/50637/HNSPPI_V1.1.git
+
+[6] Execute the code cell by cell:
+  
+run main.ipynb in Jupyter Notebook cell by cell
